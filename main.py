@@ -66,7 +66,6 @@ def maximizeFor(team, pizzas):
         for id, pizza in two_person_pizzas.items():
             for item in pizza[1]:
                 ingrediants_stack.append(item)
-        print(ingrediants_stack)
 
         while len(ingrediants_stack) >= 0:
             # the other remaining one pizza
@@ -88,66 +87,39 @@ def maximizeFor(team, pizzas):
                 team_3_pizzas[pizza_3[0]] = pizza_3[1]
                 if len(team_3_pizzas) == 3:
                     break
-        print(team_3_pizzas)
+
         return team_3_pizzas
         
     elif team == 'team_4':
-        print('Hello World')
-                
-                
+        # unique pizzas for 4 persons are twice as unique pizzas for 2 persons
+        return { **maximizeForTwoPersons(pizzas), **maximizeForTwoPersons(pizzas) }         
 
 def getMaxIngrediants(M, teams, pizzas):
     '''
     Retunr the ouput in a file
     '''
-    '''
-    SAMPLE INPUT:
-    5 1 2 1 
-    3 onion pepper olive
-    3 mushroom tomato basil
-    3 chicken mushroom pepper
-    3 tomato mushroom basil
-    2 chicken basil
-
-    SAMPLE OUTPUT:
-    2                   # number of orders delived ( one per team)                              
-    2   1   4           # order 1 consists of two pizzas[1, 4] for 2-person team
-    3   0   2   3       # order 2 consists of three pizzas[0, 2, 3] for 3-person team
-
-
-    7 2 0 1
-    8 0 2 0
-    2 0 1 0 || 2 0 0 1
-    21 1 0 4
-    '''
     temp_pizza = M
     order_count = 0
-    # orders = {
-    #     'team_2': 0,
-    #     'team_3': 0,
-    #     'team_4': 0
-    # }
     while temp_pizza > 1:
         if temp_pizza % 2 != 0 or (teams[0] == 0 and teams[2] == 0 ) and teams[1] > 0:
-            output = maximizeFor('team_3', pizzas)   # this function should wirte the pizzas to file
             order_count += 1
             temp_pizza -= 3
+            output = maximizeFor('team_3', pizzas)
+            writeOutput(output)         # write the output to a file
         
         if temp_pizza % 2 == 0 or teams[1] == 0:
             if teams[2] > 0 and temp_pizza >= 4:
                 temp_pizza -=4
-                output = maximizeFor('team_4', pizzas)
                 order_count += 1
+                output = maximizeFor('team_4', pizzas)
+                writeOutput(output)     # write the output to a file
             
             if teams[1] > 0 and temp_pizza >= 2:
                 temp_pizza -= 2
-                output = maximizeForTwoPersons(pizzas)
-                # print(output)
                 order_count += 1
+                output = maximizeForTwoPersons(pizzas)
+                writeOutput(output)     # write the output to a file
     
-    # print(orders)
-    # pass the orders to the maximize function
-    # maximizePerOrder(orders, pizzas)
 
 if __name__ == '__main__':
 
