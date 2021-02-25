@@ -1,5 +1,21 @@
 import random
 
+
+def writeOutput(orders, outputs):
+    
+    with open('output', "w") as file:
+        file.write(str(orders))
+        file.write("\n")
+        
+        # iterate and print the output list of dicts
+        for output in outputs:
+            file.write(str(len(output)))
+            file.write(' ')
+            for id, pizza in output.items():
+                file.write(str(id))
+                file.write(' ')
+            file.write('\n')
+
 def maximizeForTwoPersons(pizzas):
     """
     The format of orders: 
@@ -31,7 +47,6 @@ def maximizeForTwoPersons(pizzas):
             continue
 
         # iterate over the ingrediants of this pizza and pop the common items
-        # print(pizza_2)
         else:
             for item in pizza_2[1][1]:
                 if item in ingrediants_stack:
@@ -100,30 +115,33 @@ def getMaxIngrediants(M, teams, pizzas):
     '''
     temp_pizza = M
     order_count = 0
+    outputs = []
     while temp_pizza > 1:
         if temp_pizza % 2 != 0 or (teams[0] == 0 and teams[2] == 0 ) and teams[1] > 0:
             order_count += 1
             temp_pizza -= 3
             output = maximizeFor('team_3', pizzas)
-            writeOutput(output)         # write the output to a file
+            outputs.append(output)         # write the output to a file
         
         if temp_pizza % 2 == 0 or teams[1] == 0:
             if teams[2] > 0 and temp_pizza >= 4:
                 temp_pizza -=4
                 order_count += 1
                 output = maximizeFor('team_4', pizzas)
-                writeOutput(output)     # write the output to a file
+                outputs.append(output)     # write the output to a file
             
             if teams[1] > 0 and temp_pizza >= 2:
                 temp_pizza -= 2
                 order_count += 1
                 output = maximizeForTwoPersons(pizzas)
-                writeOutput(output)     # write the output to a file
+                outputs.append(output)     # write the output to a file
+
+        writeOutput(order_count, outputs)
     
 
 if __name__ == '__main__':
 
-    with open('a_example', "r") as file:
+    with open('b_little_bit_of_everything.in', "r") as file:
 
         # num of avai pizzas
         file_content = file.read().split('\n')
@@ -144,7 +162,6 @@ if __name__ == '__main__':
             ingrediants.append(list(slot[1:]))
             # print(ingrediants)
             pizzas[i-1] = ingrediants
-        # print(pizzas)
 
         # pass the input to the funciton
         getMaxIngrediants(int(M), teams, pizzas)
